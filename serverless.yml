@@ -3,6 +3,9 @@ service: sls-notes-backend
 
 frameworkVersion: '3'
 
+plugins:
+  - serverless-offline
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -14,6 +17,20 @@ provider:
   endpointType: regional
   environment:
     NOTES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+
+functions:
+  add-note:
+    handler: api/add-note.handler
+    events:
+      - httpApi: 'POST /notes'
+  update-note:
+    handler: api/update-note.handler
+    events:
+      - httpApi: 'PATCH /notes'
+  get-notes:
+    handler: api/get-notes.handler
+    events:
+      - httpApi: 'GET /notes'
 
 resources:
   Resources:
